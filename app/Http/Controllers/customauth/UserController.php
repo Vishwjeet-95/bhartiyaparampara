@@ -783,7 +783,9 @@ class UserController extends Controller
         $match = stripos($page_name, $search_val);
         $cer = '';
         // post page list
-        $post_list = Post::where('meta_title', 'LIKE', '%'.$search_val.'%')->where('post_language', $lang)->where('post_status', 1)->with('getUser')->get();
+        $post_slgs = Post::where('meta_title', 'LIKE', '%'.$search_val.'%')->where('post_status', 1)->get()->pluck('slug');
+        $post_list = Post::where('slug', 'LIKE', '%'.$post_slgs.'%')->where('post_language', $lang)->with('getUser')->get();
+        // $post_list = Post::where('meta_title', 'LIKE', '%'.$search_val.'%')->where('post_language', $lang)->where('post_status', 1)->with('getUser')->get();
         foreach($post_list as $post){
                 $cer .= '<a href="'.route('frontend.view.post', [$post->slug]).'" target="_blank" class="search-url" id="result-anchor">'.$post->meta_title.'(Post)</a>';
         }
